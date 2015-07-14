@@ -1,4 +1,5 @@
 from ubidots import ApiClient
+import requests
 import RPi.GPIO as GPIO
 import time
 import socket
@@ -37,6 +38,7 @@ class PeopleCounter(object):
 
     def _configureSensors(self):
         GPIO.setmode(GPIO.BCM)
+        GPIO.setup(4, GPIO.OUT)
         for sensor_name, sensor_config in self.sensors.iteritems():
             GPIO.setup(sensor_config['gpio'], GPIO.IN)
             sensor_config['last_presense'] = 0
@@ -67,6 +69,10 @@ class PeopleCounter(object):
             try:
                 for sensor_name, sensor_config in self.sensors.iteritems():
                     presence = GPIO.input(sensor_config['gpio'])
+                    if presence:
+                        GPIO.output(4, GPIO.HIGH)
+                    else:
+                        GPIO.output(4, GPIO.LOW)
                     if(presence != sensor_config['last_presense']):
                         if presence == 1:
                             sensor_config['count'] += 1
