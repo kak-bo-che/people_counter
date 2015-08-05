@@ -56,7 +56,7 @@ class PeopleCounter(object):
                 return True
             except requests.exceptions.ConnectionError:
                 print "Failed to connect to UbiDots"
-                time.sleep(10)
+                time.sleep(5)
 
     def _ubidotsConnect(self):
         self.api = ApiClient(self.api_key)
@@ -76,10 +76,18 @@ class PeopleCounter(object):
                         GPIO.output(4, GPIO.LOW)
                     if(presence != sensor_config['last_presense']):
                         if presence == 1:
+                            context = {}
                             sensor_config['count'] += 1
+                            if 'last_timestamp' in sensor_config:
+                                context['duration'] = int(time.time()) - sensor_config['last_timestamp']
+                            else:
+                                context['ipaddress'] = self.ipaddress
                             print "%s: %d" %(sensor_name, sensor_config['count'])
-                            sensor_config['ref'].save_value({'value':sensor_config['count'], 'context':{'ipaddress':self.ipaddress}})
+                            sensor_config['ref'].save_value({'value':sensor_config['count'], 'context':context})
+                        else:
+                            sensor_config['last_timestamp'] = int(time.time())
                         sensor_config['last_presense'] = presence
+
                 time.sleep(0.25)
             except requests.exceptions.ConnectionError:
                 self.ubidotsConfig()
