@@ -40,22 +40,23 @@ class PeopleCounter(object):
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(4, GPIO.OUT)
         for sensor_name, sensor_config in self.sensors.iteritems():
-            GPIO.setup(sensor_config['gpio'], GPIO.IN)
+            if sensor_config['pull_up']:
+                GPIO.setup(sensor_config['gpio'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            else:
+                GPIO.setup(sensor_config['gpio'], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
             sensor_config['last_presense'] = 0
             if not 'count' in sensor_config:
                 sensor_config['count'] = 0
 
     def ubidotsConfig(self):
-        for tries in range(0,10):
+        while(True):
             try:
                 self._ubidotsConnect()
                 self._ubidotsRegisterSensors()
                 return True
             except requests.exceptions.ConnectionError:
+                print "Failed to connect to UbiDots"
                 time.sleep(10)
-
-        print "Failed to connect to UbiDots"
-        sys.exit(1)
 
     def _ubidotsConnect(self):
         self.api = ApiClient(self.api_key)
