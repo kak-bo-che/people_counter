@@ -1,8 +1,8 @@
 import sqlite3
 import time
 class Database(object):
-  def __init__(self):
-    self.conn = sqlite3.connect('jonnyboards.db')
+  def __init__(self, filename='jonnyboards.db'):
+    self.conn = sqlite3.connect(filename)
     self.CreateTables()
 
   def CreateTables(self):
