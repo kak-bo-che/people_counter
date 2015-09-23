@@ -71,3 +71,7 @@ class SensorMonitor(object):
                 # sensor_config['ref'].save_value({'value':presence, 'context':context})
 
         time.sleep(0.25)
+
+if __name__ == "__main__":
+  counter = SensorMonitor()
+  counter.monitorSensors()
