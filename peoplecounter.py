@@ -7,6 +7,11 @@ import yaml # pyyaml
 import argparse
 import sys
 
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
+
 class PeopleCounter(object):
     def __init__(self, configuration_file=''):
         self.config = {}
@@ -14,7 +19,7 @@ class PeopleCounter(object):
         configuration_file = options.configuration_file
         self._loadConfig(configuration_file)
         self._ubidotsConnect()
-        self.ipaddress = socket.gethostbyname(socket.gethostname())
+        self.ipaddress = get_ip_address() #socket.gethostbyname(socket.gethostname())
         self._configureSensors()
         self.ubidotsConfig()
 
