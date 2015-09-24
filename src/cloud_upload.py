@@ -1,6 +1,6 @@
 import yaml # pyyaml
 import argparse
-import sys
+import sys, time
 import database
 import requests
 from ubidots import ApiClient
@@ -52,7 +52,7 @@ class CloudUpload(object):
           self.sensors[sensor_name]['ref'] = self.api.get_variable(sensor_config['id'])
 
   def RecordEvent(self, sensor_name, value, timestamp, count, duration, note):
-    context = {count: count, duration: duration}
+    context = {'count': count, 'duration': duration}
     ref = self.sensors[sensor_name]['ref']
     if note:
       context['note'] = note
@@ -64,9 +64,15 @@ class CloudUpload(object):
     records = self.database.RetrieveNotUploadedRows()
     for record in records:
       print record
-      import pdb; pdb.set_trace()
-#      self.RecordEvent(record)
-#      self.database.MarkRecordAsUploaded(record)
+      record_id = record[0]
+      sensor = record[2]
+      timestamp = record[1]
+      value = record[3]
+      count = record[4]
+      duration = record[5]
+      note = record[6]
+      self.RecordEvent(sensor, value, timestamp, count, duration, note)
+      self.database.MarkRecordAsUploaded(record_id)
 
 
 
@@ -77,4 +83,5 @@ if __name__ == "__main__":
       uploader.uploadData()
       time.sleep(5)
     except requests.exceptions.ConnectionError:
+      print "attempting to reconnect"
       uploader.ubidotsConfig()

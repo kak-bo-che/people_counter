@@ -16,13 +16,13 @@ class Database(object):
         VALUES(?, ?, ?, ?, ?, ?)
         """
     cursor = self.conn.cursor()
-    timestamp = int(time.time())
+    timestamp = int(time.time()*1000)
     cursor.execute(q, (timestamp, sensor, value, count, duration, note))
     self.conn.commit()
 
   def RetrieveNotUploadedRows(self):
     q = """
-        SELECT rowid, * FROM sensor_events WHERE uploaded_on = NULL
+        SELECT rowid, * FROM sensor_events WHERE uploaded_on IS NULL
         """
     cursor = self.conn.cursor()
     cursor.execute(q)
@@ -30,7 +30,7 @@ class Database(object):
     return rows
 
   def MarkRecordAsUploaded(self, record_id):
-    timestamp = int(time.time())
+    timestamp = int(time.time()*1000)
     t = (timestamp, record_id)
-    self.conn.execute("UPDATE sensor_events SET uploaded_on=? WHERE id=?", t)
+    self.conn.execute("UPDATE sensor_events SET uploaded_on=? WHERE rowid=?", t)
     self.conn.commit()
