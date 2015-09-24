@@ -60,14 +60,14 @@ class SensorMonitor(object):
                 context = {}
                 sensor_config['count'] += 1
                 if 'last_timestamp' in sensor_config:
-                    context['duration'] = int(time.time()) - sensor_config['last_timestamp']
+                    duration = int(time.time()) - sensor_config['last_timestamp']
+                    note = None
                 else:
-                    context['ipaddress'] = self.ipaddress
-                print "%s: %d" %(sensor_name, sensor_config['count'])
-                context['count'] = sensor_config['count']
+                    duration = None
+                    note = self.ipaddress
                 sensor_config['last_timestamp'] = int(time.time())
                 sensor_config['last_presense'] = presence
-                self.database.StoreSensorData(sensor_name, presence, json.dumps(context))
+                self.database.StoreSensorData(sensor_name, presence, sensor_config['count'], duration, note)
                 # sensor_config['ref'].save_value({'value':presence, 'context':context})
 
         time.sleep(0.25)

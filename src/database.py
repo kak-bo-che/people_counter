@@ -7,21 +7,22 @@ class Database(object):
 
   def CreateTables(self):
     self.conn.execute('''CREATE TABLE IF NOT EXISTS sensor_events
-             (timestamp INTEGER, sensor text, value INTEGER, note TEXT, uploaded INTEGER DEFAULT 0)''')
+             (timestamp INTEGER, sensor text, value INTEGER, count INTEGER,
+              duration INTEGER, note TEXT, uploaded_on INTEGER)''')
 
-  def StoreSensorData(self, sensor, value, note):
+  def StoreSensorData(self, sensor, value, count, duration, note):
     q = """
-        INSERT INTO sensor_events(timestamp, sensor, value, note)
-        VALUES(?, ?, ?, ?)
+        INSERT INTO sensor_events(timestamp, sensor, value, count, duration, note)
+        VALUES(?, ?, ?, ?, ?, ?)
         """
     cursor = self.conn.cursor()
     timestamp = int(time.time())
-    cursor.execute(q, (timestamp, sensor, value, note))
+    cursor.execute(q, (timestamp, sensor, value, count, duration, note))
     self.conn.commit()
 
   def RetrieveNotUploadedRows(self):
     q = """
-        SELECT rowid, * FROM sensor_events WHERE uploaded = 0
+        SELECT rowid, * FROM sensor_events WHERE uploaded_on = NULL
         """
     cursor = self.conn.cursor()
     cursor.execute(q)
@@ -29,6 +30,7 @@ class Database(object):
     return rows
 
   def MarkRecordAsUploaded(self, record_id):
-    t = (record_id, )
-    self.conn.execute("UPDATE sensor_events SET uploaded=1 WHERE id=?", t)
+    timestamp = int(time.time())
+    t = (timestamp, record_id)
+    self.conn.execute("UPDATE sensor_events SET uploaded_on=? WHERE id=?", t)
     self.conn.commit()

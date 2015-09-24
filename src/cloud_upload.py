@@ -51,18 +51,30 @@ class CloudUpload(object):
       for sensor_name, sensor_config in self.sensors.iteritems():
           self.sensors[sensor_name]['ref'] = self.api.get_variable(sensor_config['id'])
 
-  def RecordEvent(self, sensor_id):
-    try:
-    	sensor_config['ref'].save_value({'value':sensor_config['count'], 'context':context})
-    except requests.exceptions.ConnectionError:
-        self.ubidotsConfig()
+  def RecordEvent(self, sensor_name, value, timestamp, count, duration, note):
+    context = {count: count, duration: duration}
+    ref = self.sensors[sensor_name]['ref']
+    if note:
+      context['note'] = note
+
+    ref.save_value({'value':value, 'timestamp': timestamp, 'context':context})
+
 
   def uploadData(self):
     records = self.database.RetrieveNotUploadedRows()
     for record in records:
       print record
+      import pdb; pdb.set_trace()
+#      self.RecordEvent(record)
+#      self.database.MarkRecordAsUploaded(record)
+
 
 
 if __name__ == "__main__":
   uploader = CloudUpload()
-  uploader.uploadData()
+  while(True):
+    try:
+      uploader.uploadData()
+      time.sleep(5)
+    except requests.exceptions.ConnectionError:
+      uploader.ubidotsConfig()
