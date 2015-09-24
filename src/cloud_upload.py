@@ -52,12 +52,13 @@ class CloudUpload(object):
           self.sensors[sensor_name]['ref'] = self.api.get_variable(sensor_config['id'])
 
   def RecordEvent(self, sensor_id):
-    sensor_config['ref'].save_value({'value':sensor_config['count'], 'context':context})
+    try:
+    	sensor_config['ref'].save_value({'value':sensor_config['count'], 'context':context})
     except requests.exceptions.ConnectionError:
         self.ubidotsConfig()
 
   def uploadData(self):
-    records = datbase.RetrieveNotUploadedRows()
+    records = self.database.RetrieveNotUploadedRows()
     for record in records:
       print record
 

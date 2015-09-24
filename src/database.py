@@ -14,16 +14,16 @@ class Database(object):
         INSERT INTO sensor_events(timestamp, sensor, value, note)
         VALUES(?, ?, ?, ?)
         """
-    cursor = conn.cursor()
+    cursor = self.conn.cursor()
     timestamp = int(time.time())
     cursor.execute(q, (timestamp, sensor, value, note))
     self.conn.commit()
 
   def RetrieveNotUploadedRows(self):
     q = """
-        SELECT * FROM sensor_events WHERE uploaded = 0
+        SELECT rowid, * FROM sensor_events WHERE uploaded = 0
         """
-    cursor = conn.cursor()
+    cursor = self.conn.cursor()
     cursor.execute(q)
     rows = cursor.fetchall()
     return rows
