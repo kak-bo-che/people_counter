@@ -8,9 +8,10 @@ def get_ip_address():
     s.connect(("8.8.8.8", 80))
     return s.getsockname()[0]
 
-def parseOptions(self):
+def parseOptions():
     parser = argparse.ArgumentParser(description='Monitor people entering space')
     parser.add_argument('configuration_file', help='YAML configuration File')
+    parser.add_argument('database_file', help='SQLite database file')
     return parser.parse_args()
 
 def loadConfig(filename):

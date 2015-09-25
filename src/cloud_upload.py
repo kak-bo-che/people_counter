@@ -54,5 +54,5 @@ class CloudUpload(object):
 if __name__ == "__main__":
   options = util.parseOptions()
   configuration_file = options.configuration_file
-  uploader = CloudUpload(configuration_file, 'jonnyboards.db')
+  uploader = CloudUpload(configuration_file,  options.database_file)
   uploader.monitor()

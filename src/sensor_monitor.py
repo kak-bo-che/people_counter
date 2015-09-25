@@ -47,5 +47,5 @@ class SensorMonitor(object):
 if __name__ == "__main__":
   options = util.parseOptions()
   configuration_file = options.configuration_file
-  counter = SensorMonitor(configuration_file, 'jonnyboards.db')
+  counter = SensorMonitor(configuration_file, options.database_file)
   counter.monitorSensors()
