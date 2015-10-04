@@ -37,4 +37,3 @@ class Database(object):
     t = (timestamp, record_id)
     self.conn.execute("UPDATE sensor_events SET uploaded_on=? WHERE rowid=?", t)
     self.conn.commit()
-\

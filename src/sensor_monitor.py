@@ -44,8 +44,11 @@ class SensorMonitor(object):
 
         time.sleep(0.25)
 
-if __name__ == "__main__":
+def main():
   options = util.parseOptions()
   configuration_file = options.configuration_file
   counter = SensorMonitor(configuration_file, options.database_file)
   counter.monitorSensors()
+
+if __name__ == "__main__":
+  main()

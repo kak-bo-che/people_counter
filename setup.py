@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+import os
+from setuptools import setup
 
 setup(name='JonnyBoardsSensor',
       version='0.1.0',
@@ -10,5 +11,11 @@ setup(name='JonnyBoardsSensor',
       url='https://github.com/kak-bo-che/people_counter.git',
       install_requires=['ubidots', 'RPi.GPIO', 'pyyaml', 'flask'],
       packages=['src'],
+      entry_points={
+          'console_scripts': [
+              'sensor_monitor = src.sensor_monitor:main',
+              'cloud_upload = src.cloud_upload:main'
+          ]
+      },
      )
 

@@ -51,8 +51,11 @@ class CloudUpload(object):
         print "attempting to reconnect"
         self.ubidotsConfig()
 
-if __name__ == "__main__":
+def main():
   options = util.parseOptions()
   configuration_file = options.configuration_file
   uploader = CloudUpload(configuration_file,  options.database_file)
   uploader.monitor()
+
+if __name__ == "__main__":
+  main()
