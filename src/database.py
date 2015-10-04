@@ -5,6 +5,9 @@ class Database(object):
     self.conn = sqlite3.connect(filename)
     self.CreateTables()
 
+  def close(self):
+    self.conn.close()
+
   def CreateTables(self):
     self.conn.execute('''CREATE TABLE IF NOT EXISTS sensor_events
              (timestamp INTEGER, sensor text, value INTEGER, count INTEGER,
@@ -34,3 +37,4 @@ class Database(object):
     t = (timestamp, record_id)
     self.conn.execute("UPDATE sensor_events SET uploaded_on=? WHERE rowid=?", t)
     self.conn.commit()
+\

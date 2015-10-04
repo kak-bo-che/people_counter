@@ -8,7 +8,7 @@ setup(name='JonnyBoardsSensor',
       author='Troy Ross',
       author_email='kak.bo.che@gmail.com',
       url='https://github.com/kak-bo-che/people_counter.git',
-      requires=['ubidots', 'RPi.GPIO', 'pyyaml'],
+      install_requires=['ubidots', 'RPi.GPIO', 'pyyaml', 'flask'],
       packages=['src'],
      )
 

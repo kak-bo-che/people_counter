@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Johnny Boards{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+Wifi Configuration{{ util.icon('signal') }}
+  <!-- ... -->
+</div>
+{% endblock %}
+
+{% block content %}
+{{util.flashed_messages(dismissible=True)}}
+<div class="container">
+  <h1>Collected Data</h1>
+  <div class="data"></div>
+</div>
+{% endblock %}
