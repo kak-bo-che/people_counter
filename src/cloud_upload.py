@@ -38,7 +38,7 @@ class CloudUpload(object):
     records = self.database.RetrieveNotUploadedRows()
     for record in records:
       print record
-      record_id, timestamp, sensor, value, count, duration, note = record
+      record_id, timestamp, sensor, value, count, duration, note, uploaded_at = record
       self.RecordEvent(sensor, value, timestamp, count, duration, note)
       self.database.MarkRecordAsUploaded(record_id)
 
