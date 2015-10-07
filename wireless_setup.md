@@ -112,6 +112,7 @@ systemctl enable wpa_supplicant@wlan0
 This script is called automatically on CONNECT/DISCONNECT for any networks including
 the ones running in AP mode
 
+*start_dnsmasq.sh*
 ```bash
 #!/bin/bash
 
@@ -143,7 +144,7 @@ dhcp-range=192.168.20.50,192.168.20.150,12h
 wpa_cli is the daemon that will monitor the network state of various interfaces for wpa_supplicant. It is a bit tricky to get started at the right time with systemd, but I found that starting the service after wpa_supplicant creates the control socket for the wireless interface is the way to go. To listen for the control socket the path unit file was used and tied to the wpa_cli service unit.
 Their association happens automatically based on matching file names.
 
-*/usr/lib/systemd/system/wpa_cli\@.path*
+*/usr/lib/systemd/system/wpa_cli@.path*
 
 ```ini
 [Path]
@@ -152,7 +153,7 @@ PathExists=/var/run/wpa_supplicant/%i
 WantedBy=default.target
 ```
 
-*/usr/lib/systemd/system/wpa_cli\@.service*
+*/usr/lib/systemd/system/wpa_cli@.service*
 
 ```ini
 [Unit]
@@ -207,6 +208,15 @@ Unit=restart_wpa_supplicant@%i.service
 [Install]
 WantedBy=multi-user.target
 ```
-
+## Install and Enable
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable wpa_cli@wlan.service
+sudo systemctl enable wpa_supplicant@wlan0
+sudo systemctl enable restart_wpa_supplicant@wlan0.timer
+```
 MAC 7c:dd:90:7e:57:9d
+
+
+
 

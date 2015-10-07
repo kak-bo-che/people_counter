@@ -1,0 +1,14 @@
+[Unit]
+Description=Sensor Monitor Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python2 /home/a3ot/people_counter/src/sensor_monitor.py pir_config.yaml johnny_boards.db
+WorkingDirectory=/home/a3ot/people_counter
+KillSignal=SIGINT
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
